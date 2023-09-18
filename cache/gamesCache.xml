@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<listaGiochi xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="gamesCache.xsd">
+  <gioco photo="bun.png" id="1" dlc="no">
+     <titolo>Gun Bun</titolo>
+     <prezzo>19.99</prezzo>
+     <versione>1.25</versione>
+     <descrizione>Bun è un piccolo coniglio nella terra di Fauna, aiutalo a salvare i suoi amici. Questo platform game con elementi GDR, è stato creato dai creatori di Terraria</descrizione>
+  </gioco>
+  <gioco photo="jet.png" id="2" dlc="no">
+     <titolo>Fire Jet Storm 2</titolo>
+     <prezzo>49.99</prezzo>
+     <versione>2.0</versione>
+     <descrizione>Vola libero su ne cielo: Fire jet torna con il secondo capilo! Ispirato a 1945 IeII, il secondo capilo della saga offre una nuova modalità multiplayer</descrizione>
+  </gioco>
+  <gioco photo="sun.png" id="3" dlc="no">
+     <titolo>Sunlight 3: the moon</titolo>
+     <prezzo>34.99</prezzo>
+     <versione>3.6</versione>
+     <descrizione>Sunlight giunge al suo ultimo capitolo. L'avventura di John Starminer giunge alla conclusione in questo ultimo emozionante capitolo ambientato sulla luna. Valutato da IGN come: 'Il miglior open world del 2023'</descrizione>
+  </gioco>
+  <gioco id="4" dlc="yes" idRef="3">
+     <titolo>DLC(Sunlight3: the moon):Saturn day nights dreams 	</titolo>
+     <prezzo>14.99</prezzo>
+     <versione>0.1</versione>
+  </gioco>
+   <gioco id="5" dlc="yes" idRef="1">
+     <titolo>DLC(Gun Bun):Racoon </titolo>
+     <prezzo>4.99</prezzo>
+     <versione>0.1</versione>
+  </gioco>
+   <gioco id="6" dlc="yes" idRef="1">
+     <titolo>DLC(Gun Bun):Sparrows</titolo>
+     <prezzo>4.99</prezzo>
+     <versione>0.1</versione>
+  </gioco>
+   <gioco id="7" dlc="yes" idRef="2">
+     <titolo>DLC(Fire jet Storm 2):Delta's protocol 	</titolo>
+     <prezzo>19.99</prezzo>
+     <versione>0.1</versione>
+  </gioco>
+</listaGiochi>

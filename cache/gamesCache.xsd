@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="listaGiochi">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="gioco" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+   <xsd:element name="gioco">
+      <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element name="titolo" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="prezzo" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="versione" type="xsd:double" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="descrizione" type="xsd:string" minOccurs="0" maxOccurs="1" />
+        </xsd:sequence>
+        <xsd:attribute name="photo" type="xsd:string" use="implied"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="idRef" type="xsd:IDREF" use="implied"/>
+        <xsd:attribute name="dlc" type="xsd:boolean" use="required"/>
+      </xsd:complexType>
+   </xsd:element>
+</xsd:schema>

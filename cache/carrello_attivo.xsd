@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+  <xsd:element name="listaCarrelli">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element  ref="carrello" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="carrello">
+  <xsd:complexType>
+    <xsd:sequence>
+      <xsd:element ref="gioco" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id_user" typer="xsd:string" use="required"/>
+  </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="gioco">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element  name="titolo"  type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element  name="prezzo"  type="xsd:double" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="id_game" typer="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
