@@ -1,8 +1,10 @@
-
+body{
+  overflow: hidden;
+}
 
 .flexContainer{
   align-items: center;
-  height: 116%;
+  height: 114%;
 }
 
 .table{
@@ -22,7 +24,7 @@
  color:white;
  font-size: 16px;
  padding:2%;
-
+  
 }
 
 .table input[type="text"]{

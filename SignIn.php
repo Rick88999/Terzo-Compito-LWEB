@@ -70,8 +70,8 @@ $info_user_table='info_user_table';
  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>DownHill Game Store</title>
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
-    <link rel="stylesheet" href="signIn__.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
+    <link rel="stylesheet" href="signIn_.css" media="screen">
   </head>
   <body>
     <div class="flexContainer">

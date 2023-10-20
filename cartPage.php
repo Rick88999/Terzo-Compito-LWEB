@@ -1,9 +1,8 @@
 <?php
 /*Questa pagina serve da cart per il sito. Ogni gioco o DLC verra mostrato e pota essere selezionato per la rimozione,
-oppure si potra andare al pagamento. Il cart attivo sarà un unico file xml dove ogni cart sarà differnzato dall'altro in base al id utente di riferimento.
-Ogni gioco nel carrello utente avrà un id gioco come attributo, mentre i suoi child saranno il titolo e il prezzo del gioco stesso.
-Va da se che ogni utente avra più giochi nel carrello e che cart di utenti diversi possono avere lo stesso game al proprio interno.
-Lo stesso utente però non potra avere lo stesso gioco nel suo carrello (questa condizione esige un controllo eseguito nella pagina precedente gameList.php)*/
+oppure si pota andare al pagamento. (Ovviamente essendo un HOMEWORK il pulsante payAll riporterà alla pagina di HOME e non ad una di transazione).
+Altra cosa importante è come è organizzata la tabella active_cart: ogni utente avrà un id utente nel progetto. Quindi ho pensato che ogni carrello attivo per utente fosse un insieme di tuple riferite all'utente stesso
+con chiave primaria la coppia [id_utente + id_prodotto]. Quindi più tuple per lo stesso utente, ma con prodotti diversi.*/
 session_name('HillDownService');
 session_start();
 require("utility.php");
@@ -14,39 +13,39 @@ $error2="";
 
 
 if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
-  //Apertura del contenitore dei vari carrelli
+
+
   $xmlstream=streamChanger("cache/carrello_attivo.xml");
   $XMLcart=new DOMDocument();
   $XMLcart->loadXML($xmlstream);
   $rootCart=$XMLcart->documentElement;
-  //Apertura della lista Giochi disponibili per l'acquisto
+
   $xmlstream=streamChanger("cache/gamesCache.xml");
   $XMLcache=new DOMDocument();
   $XMLcache->loadXML($xmlstream);
   $rootCache=$XMLcache->documentElement;
   $games=$rootCache->childNodes;
 
-  $userNodeFlag=false; //Serve per segnalare nella condizione 'payAll' se l'utente possiede già giochi o va creato un nuovo nodo utente
+  $userNodeFlag=false;
 
 
 
   if (isset($_POST['send'])) {
 
-    if ($_POST['send']=='pay All') { //Al pagamento inserisco i giochi nel file UserGameTable.xml
-      //Apertura file che contiene tutti gli utenti e i relativi giochi o DLC posseduti
+    if ($_POST['send']=='pay All') { //Al pagamento inserisco i giochi nella users_game_list
+
       $xmlstream=streamChanger("cache/UserGameTable.xml");
       $XMLuserTable=new DOMDocument();
       $XMLuserTable->loadXML($xmlstream);
       $rootUserTable=$XMLuserTable->documentElement;
       $usersList=$rootUserTable->childNodes;
 
-      //Sfoglia  tutti i cart e trova quello compilato per l'utente che sta visualizzando la pagina
+
       $carts=$rootCart->childNodes;
       for ($i=0; $i < $carts->length; $i++) {
         $cart=$carts->item($i);
         if($cart->getAttribute('id_user')==$_SESSION['id']) $userCart=$cart;
       }
-      //Sfoglia tutti gli utenti con i relativi giochi e DlC aqcuistati in seguito aggiungi in nuovi giochi in acquisto
       for ($i=0; $i < $usersList->length; $i++) {
         $userList=$usersList->item($i);
         if ($userList->getAttribute('id_user')==$_SESSION['id']) {
@@ -54,10 +53,10 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
             $newRecord=$XMLuserTable->createElement("id_game", $game->getAttribute('id_game'));
             $userList->appendChild($newRecord);
           }
-          $userNodeFlag=true; //Nel caso non ci fosse nessun nodo utente...
+          $userNodeFlag=true;
         }
       }
-      //... crea un nuovo nodo utente cosi da inserire i giochi in acquisto. Poi appendi il nuovo utente al root del file XMLuserTable
+
       if(!($userNodeFlag)){
         $newUser=$XMLuserTable->createElement("UserGames");
         $newUser->setAttribute('id_user', $_SESSION['id']);
@@ -67,7 +66,6 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
         }
         $rootUserTable->appendChild($newUser);
       }
-      //Salva tutto, rimuovi il carrello attivo e libera il buffer degli ids selezionati in precedenza
       $rootCart->removeChild($userCart);
       unset($_SESSION['ids_to_cart']);
       $XMLcart->save("cache/carrello_attivo.xml");
@@ -81,12 +79,11 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     }
   }
 
-//Il seguente codice verifica che ci siano prodotti in un carrello già attivo in precedenza per l'utente.
-//Inseguito mette questi prodotti in un array, che conserva tutte le informazioni; in seguito saranno inserite in nuovo nodo da appendere al rootCart
+/*Il seguente codice verifica che ci siano prodotti in un carrello già attivo in precedenza per l'utente. Inseguito mette questi prodotti in "array di tuple", che conserva tutte le informazioni*/
   $flag=0;
-  $active=false;//Segnala se il nodo carrello che fa riferimento all'utente esiste o va creato (non esiste un carrello attivo per l'utente X)
+  $active=false;
 
-//Seleziono il nodo cart che far riferimento all'utente
+
   if($rootCart->hasChildNodes()){
     $carts=$rootCart->childNodes;
     for ($i=0; $i < $carts->length ; $i++) {
@@ -99,14 +96,14 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     }
   }
 
- //Se ci sono nuovi giochi da mettere nel carrello
+
   if(isset($_SESSION['ids_to_cart'])){
-    //e se esiste già un nodo carrello per questo utente
+
     if($active){
       foreach ($_SESSION['ids_to_cart'] as $id) {
         $newRecord=$XMLcart->createElement("gioco");
         $newRecord->setAttribute("id_game", $id);
-        //cerca i relativi giochi
+
         for ($i=0; $i < $games->length ; $i++) {
           $game=$games->item($i);
           if($game->getAttribute('id')==$id){
@@ -120,7 +117,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
             }
           }
         }
-        // e inseriscili come nuovi elementi nel nodo cart esistente.
+
         $newTitolo=$XMLcart->createElement("titolo", $recordBay[0]);
         $newPrezzo=$XMLcart->createElement("prezzo", $recordBay[1]);
         $newRecord->appendChild($newTitolo);
@@ -128,14 +125,14 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
         $userCart->appendChild($newRecord);
     }
   }
-    else{ //Se non esiste un nodo cart per l'utente invece
+    else{
+      $newCart=$XMLcart->createElement("carrello");
+      $newCart->setAttribute("id_user", $_SESSION['id']);
+
       foreach ($_SESSION['ids_to_cart'] as $id) {
-        //Crea un nuovo nodo cart con attributo id_user pari all'id dell'utente in questione
-        $newCart=$XMLcart->createElement("carrello");
-        $newCart->setAttribute("id_user", $_SESSION['id']);
         $newRecord=$XMLcart->createElement("gioco");
         $newRecord->setAttribute("id_game", $id);
-        //preleva le informazioni relative al gioco sempre nella lista giochi disponibili
+
         for ($i=0; $i < $games->length; $i++) {
           $game=$games->item($i);
           if($game->getAttribute('id')==$id){
@@ -149,7 +146,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
             }
           }
         }
-        //compila il nuovo nodo cart e poi appendilo al rootCart
+
         $newTitolo=$XMLcart->createElement("titolo", $recordBay[0]);
         $newPrezzo=$XMLcart->createElement("prezzo", $recordBay[1]);
         $newRecord->appendChild($newTitolo);
@@ -168,16 +165,14 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
 
 
   if (isset($_POST['delete_checked'])) { //Si attiva solo se abbiamo inviato dalla form alcuni giochi da eliminare
-    $userCartDeleted=false; //Serve a capire sel il cart dell'utente é stato acncellato da una porzione di codice
     if ($_POST['send']=='delete') {
       $carts=$rootCart->childNodes;
-      for ($i=0; $i < $carts->length ; $i++) {//Seleziono da capo con questo codice il cart dell'utente di riferimento
+      for ($i=0; $i < $carts->length ; $i++) {
         $cart=$carts->item($i);
         if($cart->getAttribute('id_user')==$_SESSION['id']){
           $userCart=$cart;
         }
       }
-      //Rimuovo i vari giochi selezionati dal cart attivo
       foreach ($_POST['delete_checked'] as $to_del) {
         foreach ($userCart->childNodes as $game) {
           if ($game->getAttribute('id_game')==$to_del) {
@@ -185,16 +180,15 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
           }
         }
       }
-      //se il cart é vuoto lo elimino
+
       if (!($userCart->hasChildNodes())) {
         $rootCart->removeChild($userCart);
-        $userCartDeleted=true;
       }
     }
     $XMLcart->save("cache/carrello_attivo.xml");
-    if(!($rootCart->hasChildNodes()) || $userCartDeleted) $flag=0; //Setta flag a 0 nel momento in cui non esiste più un cart attivo che fa riferimento all'utente
+    if(!($rootCart->hasChildNodes())) $flag=0; //Se, in seguito alla cancellazione di uno o più prodotti, row1[] diventasse vuoto, allora nache il carrello lo sarebbe. Dunque settiamo flag=0
     }
-      //!($rootCart->hasChildNodes()) serve a verificare se non ci siano carrelli in assoluto
+
 
 //ATTENZIONE: uso la stringa error solo per fare economia di variabili
   if ($flag==0) {
@@ -218,7 +212,7 @@ else {
  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>DownHill Game Store</title>
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
     <link rel="stylesheet" href="cartPage_.css" media="screen">
   </head>
   <body>
@@ -257,8 +251,9 @@ else {
 
         <div class="table">
           <?php
-          /*Stampo per ogni nodo gioco nel cart, il nome e il prezzo. Aggiungendo una casella di check, per la selezione e l'eventuale eliminazione del gioco dal carrello*/
+          /*Stampo per ogni tupla gioco, il nome e il prezzo. Aggiungendo una casella di check, per la selezione e l'eventuale eliminazione del gioco dal carrello*/
           $total=0;
+
           if($flag>0){
             echo "<form action=\"".$_SERVER['PHP_SELF']."\" method=\"post\">";
             echo "<table>";

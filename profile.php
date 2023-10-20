@@ -73,7 +73,7 @@ else {
   <head>
     <title>DownHill Game Store</title>
     <link rel="stylesheet" href="profile.css" media="screen">
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
   </head>
   <body>
     <div class="flexContainer">

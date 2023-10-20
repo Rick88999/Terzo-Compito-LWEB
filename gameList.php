@@ -3,20 +3,17 @@ require("utility.php");
 
 
 
-/*La pagina di game list serve per visualizzare il gioco in maggior dettaglio. Inoltre è la pagina che permette, se non abbiamo già il gioco o DLC, di acquistarlo.
+/*La pagina di game list serve per visualizzare il gioco in maggior dettavglio. Inoltre è la pgina che permette, se non abbiamo già il gioco o DLC, di acquistarlo.
 Possiamo arrivarci dalla HOME con il pulsante BUY o dalla Libreria con il pulsante SEE*/
 session_name('HillDownService');
 session_start();
 
 
 
-/*Ogni gioco é contenuto nel file gamesCache.xml e possiede:
-ATTRUBUTI=>un id, un img(se non é un dlc), un bool ch dice se é o meno un dlc e nel caso lo sia un attributo idRef del gioco di cui é dlc
-CAMPI->titolo, prezzo, versione e nel caso sia un gioco non un dlc anche una descrizione
-*/
+
 
 if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
-  $tab=array(); // la Tab ci serve per stampare i vari giochi e dlc
+  $tab=array();
   $xmlstream=streamChanger("cache/gamesCache.xml");
   $XMLlistaGiochi= new DOMDocument();
   $XMLlistaGiochi->loadXML($xmlstream);
@@ -25,7 +22,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
   for ($i=0; $i <$elem->length ; $i++) {
     $game=$elem->item($i);
     $id_prodotto=$game->getAttribute('id');
-    if ($id_prodotto==$_SESSION['id_game']) { //Prendo le info del gioco e compilo la riga per la tab
+    if ($id_prodotto==$_SESSION['id_game']) {
       $row=array();
       $row[]=$id_prodotto;
       foreach ($game->childNodes as $field) {
@@ -38,7 +35,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     }
   }
 
-  for ($i=0; $i <$elem->length ; $i++) { //Prendo le info di ogni dlc che ha come riferimento il gioco in questione e poi creo un row per la tab
+  for ($i=0; $i <$elem->length ; $i++) {
     $game=$elem->item($i);
     $id_ref=$game->getAttribute('idRef');
     $id_prodotto=$game->getAttribute('id');
@@ -72,7 +69,6 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     if ($_POST['send']=='Al carrello-->') {
       if (isset($_POST['games_into_cart']) && !(empty($_POST['games_into_cart']))) { //Se ho selzionato giochi da acquistare e vado sul pulsante AL Carrello
         for ($i=0; $i <$elemUserTable->length ; $i++) {
-          //controllo prima che l'utente non abbia già i giochi selezionati
           $user=$elemUserTable->item($i);
           if($user->getAttribute('id_user')==$_SESSION['id']){
             foreach ($user->childNodes as $game) {
@@ -89,7 +85,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
 
           $cart=$carts->item($i);
           if ($cart->getAttribute('id_user')==$_SESSION['id']){
-            //e poi controllo che non siano già presenti in un carrello attivo
+
             foreach ($cart->childNodes as $game) {
 
               foreach ($_POST['games_into_cart'] as $k) {
@@ -132,8 +128,10 @@ da voler acquistare e proseguire per il carrello*/
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>DownHill Game Store</title>
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
     <link rel="stylesheet" href="gameList_.css" media="screen">
+    <script src="resizeScript.js"></script>
+
   </head>
   <body id="bodyGameList">
     <div class="flexContainer">

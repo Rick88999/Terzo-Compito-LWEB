@@ -61,8 +61,9 @@ if(isset($_POST['send'])){
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>DownHill Game Store</title>
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
     <link rel="stylesheet" href="login__.css" media="screen">
+    <script src="resizeInit.js"></script>
   </head>
   <body>
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">

@@ -10,8 +10,8 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
 
 /*Le due funzioni succesive isset($_GET(...)) servono per indirizzare l'utente verso la pagina di gameList dove il gioco verra presentato per il suo acquisto e quello di ulteriri DLC.
 Nella mia idea originale (un pò come avviene anche su STEAM) si possono comprare anche DLC non avendo in libreria il gioco originale.
-Certo come poi si potrà notare i dlc in libreria (Se il gioco originale non é presente) non verranno mostrati.
-*/
+Certo come poi si potrà notare i dlc in libreria non verranno mostrati. Ma saranno cmq presenti e aggiunti al gioco (anche se non si vedono)
+Inoltre non ho voluto creare un campo univoco per i due brach di codice, differenziandoli poi in base al value, per una questione di velocità. In seguito nel progetto farò il contrario (per esercizio ulteriore e diffrenziare il codice)*/
 
   if(isset($_GET['game'])){
     $_SESSION['id_game']=$_GET['game']; //Quando selezioneremo il pulsante BUY verremo trasportati nella pagina gameList dove attraverso $_SESSION['id_game'], la pagina si configurerà per mostarci il gioco in questione
@@ -45,7 +45,7 @@ else {
   <head>
     <title>DownHill Game Store</title>
     <link rel="stylesheet" href="StoreHomePage_.css" media="screen">
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
   </head>
   <body>
     <div class="flexContainer">
@@ -91,7 +91,7 @@ else {
 
 
         <?php
-        $xmlstream=streamChanger("cache/gamesCache.xml");//Funzione che crea prende un file XML lo passa la parser e ne restituisce il flusso
+        $xmlstream=streamChanger("cache/gamesCache.xml");
 
         $struct="<table>";
         $dom = new DOMDocument();
@@ -102,7 +102,6 @@ else {
         for ($i=0; $i < $n ; $i++) {
           $game=$elem->item($i);
           $nodlc=$game->getAttribute('dlc');
-          //Predo tutti i giochi che non sono DLC e li stampo a schermo
           if ($nodlc=='no') {
             $photo=$game->getAttribute('photo');
             $id_prodotto=$game->getAttribute('id');
